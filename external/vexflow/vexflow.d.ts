@@ -135,6 +135,10 @@ declare namespace Vex {
             public beam: Beam;
         }
 
+        export class TabNote extends StaveNote {
+          constructor(note_struct: any);
+        }
+
         export class GraceNote extends StaveNote {
             static SCALE: number;
             static LEDGER_LINE_OFFSET: number;
@@ -212,6 +216,10 @@ declare namespace Vex {
             public addTimeSignature(sig: string): void;
 
             public setVoltaType(type: number, number_t: number, y: number): void;
+        }
+
+        export class TabStave extends Stave {
+          constructor(x: number, y: number, width: number, options: any);
         }
 
         export class Volta extends StaveModifier {
