@@ -45,6 +45,7 @@ import { GraphicalSlur } from "../GraphicalSlur";
 import { BoundingBox } from "../BoundingBox";
 import { ContinuousDynamicExpression } from "../../VoiceData/Expressions/ContinuousExpressions/ContinuousDynamicExpression";
 import { VexFlowContinuousDynamicExpression } from "./VexFlowContinuousDynamicExpression";
+import { VexFlowTabMeasure } from "./VexFlowTabMeasure";
 
 export class VexFlowMusicSheetCalculator extends MusicSheetCalculator {
   /** space needed for a dash for lyrics spacing, calculated once */
@@ -316,6 +317,9 @@ export class VexFlowMusicSheetCalculator extends MusicSheetCalculator {
 
   protected graphicalMeasureCreatedCalculations(measure: GraphicalMeasure): void {
     (measure as VexFlowMeasure).graphicalMeasureCreatedCalculations();
+    if (measure.tabMeasure !== undefined) {
+      (measure.tabMeasure as VexFlowTabMeasure).graphicalMeasureCreatedCalculations();
+    }
   }
 
   /**

@@ -23,6 +23,7 @@ import { OrnamentEnum, OrnamentContainer } from "../../VoiceData/OrnamentContain
 import { Notehead, NoteHeadShape } from "../../VoiceData/Notehead";
 import { unitInPixels } from "./VexFlowMusicSheetDrawer";
 import { EngravingRules } from "../EngravingRules";
+import { TabNote } from "../../VoiceData/TabNote";
 
 /**
  * Helper class, which contains static methods which actually convert
@@ -303,6 +304,36 @@ export class VexFlowConverter {
             vfnote.addDotToAll();
         }
         return vfnote;
+    }
+
+    /**
+     * Convert a set of GraphicalNotes to a VexFlow StaveNote
+     * @param notes form a chord on the staff
+     * @returns {Vex.Flow.StaveNote}
+     */
+    public static TabNote(gve: GraphicalVoiceEntry): Vex.Flow.TabNote {
+      const notes: GraphicalNote[] = gve.notes.reverse();
+      const tabPositions: {}[] = [];
+      const frac: Fraction = notes[0].graphicalNoteLength;
+      const isTuplet: boolean = notes[0].sourceNote.NoteTuplet !== undefined;
+      let duration: string = VexFlowConverter.duration(frac, isTuplet);
+      let numDots: number = 0;
+      for (const note of notes) {
+        const tabNote: TabNote = note.sourceNote as TabNote;
+        const tabPosition: { str: string, fret: string } = { str: tabNote.StringNumber.toString(), fret: tabNote.FretNumber.toString() };
+        tabPositions.push(tabPosition);
+        if (numDots < note.numberOfDots) {
+          numDots = note.numberOfDots;
+        }
+      }
+      for (let i: number = 0, len: number = numDots; i < len; ++i) {
+        duration += "d";
+      }
+      const vfnote: Vex.Flow.TabNote = new Vex.Flow.TabNote({
+        duration: duration,
+        positions: tabPositions,
+      });
+      return vfnote;
     }
 
     public static generateArticulations(vfnote: Vex.Flow.StemmableNote, articulations: ArticulationEnum[]): void {

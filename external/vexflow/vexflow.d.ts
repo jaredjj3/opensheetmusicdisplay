@@ -111,6 +111,8 @@ declare namespace Vex {
 
             public getNoteHeadBounds(): any;
 
+            public getX(): number;
+
             public getNoteHeadBeginX(): number;
 
             public getNoteHeadEndX(): number;
