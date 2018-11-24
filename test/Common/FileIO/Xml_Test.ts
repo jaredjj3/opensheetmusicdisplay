@@ -23,6 +23,7 @@ describe("XML interface", () => {
         "CharlesGounod_Meditation.xml",
         "Debussy_Mandoline.xml",
         "Dichterliebe01.xml",
+        "GuitarTablature_test.xml",
         "JohannSebastianBach_Air.xml",
         "JohannSebastianBach_PraeludiumInCDur_BWV846_1.xml",
         "JosephHaydn_ConcertanteCello.xml",
