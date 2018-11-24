@@ -150,8 +150,8 @@ export class ClefInstruction extends AbstractNotationInstruction {
                 this.referenceCyPosition = 2;
                 break;
             case ClefEnum.TAB:
-                this.clefPitch = new Pitch(NoteEnum.G, 2, AccidentalEnum.NONE);
-                this.referenceCyPosition = -1;
+                this.clefPitch = new Pitch(NoteEnum.G, 0, AccidentalEnum.NONE);
+                this.referenceCyPosition = 0;
                 break;
             default:
                 throw new ArgumentOutOfRangeException("clefType");

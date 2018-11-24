@@ -3,7 +3,7 @@ import {GraphicalMusicPage} from "./GraphicalMusicPage";
 import {EngravingRules} from "./EngravingRules";
 import {RhythmInstruction} from "../VoiceData/Instructions/RhythmInstruction";
 import {KeyInstruction} from "../VoiceData/Instructions/KeyInstruction";
-import {ClefInstruction} from "../VoiceData/Instructions/ClefInstruction";
+import { ClefInstruction, ClefEnum } from "../VoiceData/Instructions/ClefInstruction";
 import {SourceMeasure} from "../VoiceData/SourceMeasure";
 import {MusicSystem} from "./MusicSystem";
 import {BoundingBox} from "./BoundingBox";
@@ -478,8 +478,13 @@ export class MusicSystemBuilder {
         let keyAdded: boolean = false;
         let rhythmAdded: boolean = false;
         if (currentClef !== undefined) {
+          if (measure.tabMeasure !== undefined) {
+            measure.tabMeasure.addClefAtBegin(currentClef);
+            measure.addClefAtBegin(new ClefInstruction(ClefEnum.G));
+          } else {
             measure.addClefAtBegin(currentClef);
-            clefAdded = true;
+          }
+          clefAdded = true;
         } else {
             currentClef = this.activeClefs[visibleStaffIdx];
         }

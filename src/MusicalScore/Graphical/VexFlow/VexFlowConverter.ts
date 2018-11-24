@@ -555,7 +555,8 @@ export class VexFlowConverter {
 
             // TAB Clef
             case ClefEnum.TAB:
-                type = "tab";
+                // only used currently for creating the notes in the normal stave: There we need a normal treble clef
+                type = "treble";
                 break;
             default:
         }
