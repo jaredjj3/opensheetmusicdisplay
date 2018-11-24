@@ -27,6 +27,7 @@ import { ArticulationReader } from "./MusicSymbolModules/ArticulationReader";
 import { SlurReader } from "./MusicSymbolModules/SlurReader";
 import { Notehead } from "../VoiceData/Notehead";
 import { Arpeggio, ArpeggioType } from "../VoiceData/Arpeggio";
+import { TabNote } from "../VoiceData/TabNote";
 
 export class VoiceGenerator {
   constructor(instrument: Instrument, voiceId: number, slurReader: SlurReader, mainVoice: Voice = undefined) {
@@ -415,7 +416,32 @@ export class VoiceGenerator {
     noteOctave -= Pitch.OctaveXmlDifference;
     const pitch: Pitch = new Pitch(noteStep, noteOctave, noteAccidental);
     const noteLength: Fraction = Fraction.createFromFraction(noteDuration);
-    const note: Note = new Note(this.currentVoiceEntry, this.currentStaffEntry, noteLength, pitch);
+    let note: Note = undefined;
+    let stringNumber: number = -1;
+    let fretNumber: number = -1;
+    // check for guitar tabs:
+    const notationNode: IXmlElement = node.element("notations");
+    if (notationNode !== undefined) {
+      const technicalNode: IXmlElement = node.element("notations");
+      if (technicalNode !== undefined) {
+        const stringNode: IXmlElement = technicalNode.element("string");
+        if (stringNode !== undefined) {
+          stringNumber = parseInt(stringNode.value, 10);
+        }
+        const fretNode: IXmlElement = technicalNode.element("fret");
+        if (fretNode !== undefined) {
+          fretNumber = parseInt(fretNode.value, 10);
+        }
+      }
+    }
+
+    if (stringNumber < 0 || fretNumber < 0) {
+      // create normal Note
+      note = new Note(this.currentVoiceEntry, this.currentStaffEntry, noteLength, pitch);
+    } else {
+      // create TabNote
+      note = new TabNote(this.currentVoiceEntry, this.currentStaffEntry, noteLength, pitch, stringNumber, fretNumber);
+    }
     note.PrintObject = printObject;
     note.IsCueNote = isCueNote;
     note.StemDirectionXml = stemDirectionXml; // maybe unnecessary, also in VoiceEntry
