@@ -7,7 +7,7 @@ import { Fraction } from "../../Common/DataObjects/Fraction";
 import { Note } from "../VoiceData/Note";
 import { MusicSheet } from "../MusicSheet";
 import { GraphicalMeasure } from "./GraphicalMeasure";
-import { ClefInstruction, ClefEnum } from "../VoiceData/Instructions/ClefInstruction";
+import { ClefInstruction } from "../VoiceData/Instructions/ClefInstruction";
 import { LyricWord } from "../VoiceData/Lyrics/LyricsWord";
 import { SourceMeasure } from "../VoiceData/SourceMeasure";
 import { GraphicalMusicPage } from "./GraphicalMusicPage";
@@ -1511,6 +1511,13 @@ export abstract class MusicSheetCalculator {
         }
         const gve: GraphicalVoiceEntry = graphicalStaffEntry.findOrCreateGraphicalVoiceEntry(voiceEntry);
         gve.octaveShiftValue = octaveShiftValue;
+
+        const graphicalTabStaffEntry: GraphicalStaffEntry = graphicalStaffEntry.tabStaffEntry;
+        let tse: GraphicalVoiceEntry = undefined;
+        if (graphicalTabStaffEntry !== undefined) {
+          tse = graphicalTabStaffEntry.findOrCreateGraphicalVoiceEntry(voiceEntry);
+        }
+
         for (let idx: number = 0, len: number = voiceEntry.Notes.length; idx < len; ++idx) {
             const note: Note = voiceEntry.Notes[idx];
             if (note === undefined) {
@@ -1538,6 +1545,12 @@ export abstract class MusicSheetCalculator {
                 if (note.NoteTuplet !== undefined && note.PrintObject) {
                     this.handleTuplet(graphicalNote, note.NoteTuplet, openTuplets);
                 }
+            }
+
+            if (note instanceof TabNote && tse !== undefined) {
+              const graphicalTabNote: GraphicalNote = MusicSheetCalculator.symbolFactory.createNote(note, tse, activeClef, octaveShiftValue, undefined);
+              graphicalTabStaffEntry.addGraphicalNoteToListAtCorrectYPosition(tse, graphicalTabNote);
+              graphicalTabNote.PositionAndShape.calculateBoundingBox();
             }
         }
         if (voiceEntry.Articulations.length > 0) {
