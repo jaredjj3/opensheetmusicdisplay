@@ -7,7 +7,7 @@ import { Fraction } from "../../Common/DataObjects/Fraction";
 import { Note } from "../VoiceData/Note";
 import { MusicSheet } from "../MusicSheet";
 import { GraphicalMeasure } from "./GraphicalMeasure";
-import { ClefInstruction } from "../VoiceData/Instructions/ClefInstruction";
+import { ClefInstruction, ClefEnum } from "../VoiceData/Instructions/ClefInstruction";
 import { LyricWord } from "../VoiceData/Lyrics/LyricsWord";
 import { SourceMeasure } from "../VoiceData/SourceMeasure";
 import { GraphicalMusicPage } from "./GraphicalMusicPage";
@@ -66,6 +66,7 @@ import { AbstractTempoExpression } from "../VoiceData/Expressions/AbstractTempoE
 import { GraphicalInstantaneousDynamicExpression } from "./GraphicalInstantaneousDynamicExpression";
 import { ContDynamicEnum } from "../VoiceData/Expressions/ContinuousExpressions/ContinuousDynamicExpression";
 import { GraphicalContinuousDynamicExpression } from "./GraphicalContinuousDynamicExpression";
+import { TabNote } from "../VoiceData/TabNote";
 
 /**
  * Class used to do all the calculations in a MusicSheet, which in the end populates a GraphicalMusicSheet.
@@ -679,6 +680,10 @@ export abstract class MusicSheetCalculator {
 
                 if (graphicalMeasure.isVisible()) {
                     visiblegraphicalMeasures.push(graphicalMeasure);
+                    // add Tab Measure if exists
+                    if (graphicalMeasure.tabMeasure !== undefined) {
+                      visiblegraphicalMeasures.push(graphicalMeasure.tabMeasure);
+                    }
 
                     if (EngravingRules.Rules.ColoringEnabled) {
                         // (re-)color notes
