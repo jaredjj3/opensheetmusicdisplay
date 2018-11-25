@@ -43,6 +43,10 @@ declare namespace Vex {
             public getBoundingBox(): BoundingBox;
 
             public getAttribute(arg: string): string;
+
+            public getTickContext(): TickContext;
+
+            public setTickContext(tickContext: TickContext): void;
         }
 
         export class Voice {
@@ -65,10 +69,38 @@ declare namespace Vex {
             public setMode(mode: any): Voice;
 
             public draw(ctx: any, stave: Stave): void;
+
+            public setTickContext(tc : TickContext) : void;
         }
 
         export class Note extends Tickable {
             public addStroke(index: number, stroke: Stroke): void;
+        }
+
+        export class TickContext {
+            shouldIgnoreTicks() : boolean;
+            getWidth() : number;
+            getX() : number;
+            setX(x : number) : TickContext;
+            getXBase() : number;
+            setXBase(xBase : number) : void;
+            getXOffset() : number;
+            setXOffset(xOffset : number) : void;
+            getPixelsUsed() : number;
+            setPixelsUsed(pixelsUsed : number) : TickContext;
+            setPadding(padding : number) : TickContext;
+            getMaxTicks() : number;
+            getMinTicks() : number;
+            getTickables() : Tickable[];
+            getCenterAlignedTickables() : Tickable[];
+            getMetrics() : {width : number, notePx : number, extraLeftPx : number, extraRightPx : number};
+            getCurrentTick() : Fraction;
+            setCurrentTick(tick : Fraction) : void;
+            getExtraPx() : {left: number, right: number, extraLeft : number, extraRight : number};
+            addTickable(tickable : Tickable) : TickContext;
+            preFormat() : TickContext;
+            postFormat() : TickContext;
+            static getNextContext(tContext : TickContext) : TickContext;
         }
 
         export class TextBracket {

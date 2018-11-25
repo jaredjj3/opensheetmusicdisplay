@@ -338,11 +338,16 @@ export class VexFlowMeasure extends GraphicalMeasure {
         // Draw all voices
         for (const voiceID in this.vfVoices) {
             if (this.vfVoices.hasOwnProperty(voiceID)) {
+                const vfVoice: Vex.Flow.Voice = this.vfVoices[voiceID];
+                const tickContext: Vex.Flow.TickContext = new Vex.Flow.TickContext();
+                for (const tickable of vfVoice.tickables) {
+                    if (!tickable.getTickContext()) {
+                        tickContext.addTickable(tickable).preFormat();
+                    }
+                }
                 ctx.save();
-                this.vfVoices[voiceID].draw(ctx, this.stave);
+                vfVoice.draw(ctx, this.stave);
                 ctx.restore();
-                // this.vfVoices[voiceID].tickables.forEach(t => t.getBoundingBox().draw(ctx));
-                // this.vfVoices[voiceID].tickables.forEach(t => t.getBoundingBox().draw(ctx));
             }
         }
         // Draw beams
