@@ -679,10 +679,11 @@ export abstract class MusicSheetCalculator {
                 const graphicalMeasure: GraphicalMeasure = allMeasures[idx][idx2];
 
                 if (graphicalMeasure.isVisible()) {
-                    visiblegraphicalMeasures.push(graphicalMeasure);
                     // add Tab Measure if exists
                     if (graphicalMeasure.tabMeasure !== undefined) {
                       visiblegraphicalMeasures.push(graphicalMeasure.tabMeasure);
+                    } else {
+                      visiblegraphicalMeasures.push(graphicalMeasure);
                     }
 
                     if (EngravingRules.Rules.ColoringEnabled) {
