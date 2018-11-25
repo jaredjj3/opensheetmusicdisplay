@@ -422,7 +422,7 @@ export class VoiceGenerator {
     // check for guitar tabs:
     const notationNode: IXmlElement = node.element("notations");
     if (notationNode !== undefined) {
-      const technicalNode: IXmlElement = node.element("notations");
+      const technicalNode: IXmlElement = notationNode.element("technical");
       if (technicalNode !== undefined) {
         const stringNode: IXmlElement = technicalNode.element("string");
         if (stringNode !== undefined) {
