@@ -2,11 +2,12 @@ import Vex = require("vexflow");
 import { Staff } from "../../VoiceData/Staff";
 import { SourceMeasure } from "../../VoiceData/SourceMeasure";
 import { VexFlowMeasure } from "./VexFlowMeasure";
-import { VexFlowStaffEntry } from "./VexFlowStaffEntry";
 import { VexFlowConverter } from "./VexFlowConverter";
 import { StaffLine } from "../StaffLine";
+import { GraphicalVoiceEntry } from "../GraphicalVoiceEntry";
 import { VexFlowVoiceEntry } from "./VexFlowVoiceEntry";
 import { Voice } from "../../VoiceData/Voice";
+
 
 export class VexFlowTabMeasure extends VexFlowMeasure {
   constructor(staff: Staff, sourceMeasure: SourceMeasure = undefined, staffLine: StaffLine = undefined) {
@@ -29,7 +30,7 @@ export class VexFlowTabMeasure extends VexFlowMeasure {
     this.updateInstructionWidth();
   }
   public graphicalMeasureCreatedCalculations(): void {
-    for (const graphicalStaffEntry of this.staffEntries as VexFlowStaffEntry[])  {
+    for (const graphicalStaffEntry of this.staffEntries) {
       // create vex flow Tab Notes:
       for (const gve of graphicalStaffEntry.graphicalVoiceEntries) {
         if (gve.notes[0].sourceNote.PrintObject) {
@@ -51,15 +52,18 @@ export class VexFlowTabMeasure extends VexFlowMeasure {
         continue;
       }
 
-      // add a vexFlow voice for this voice:
-      this.vfVoices[voice.VoiceId] = new Vex.Flow.Voice({
-        beat_value: this.parentSourceMeasure.Duration.Denominator,
-        num_beats: this.parentSourceMeasure.Duration.Numerator,
-        resolution: Vex.Flow.RESOLUTION
-      }).setMode(Vex.Flow.Voice.Mode.SOFT);
+      const restFilledEntries: GraphicalVoiceEntry[] = this.getRestFilledVexFlowStaveNotesPerVoice(voice);
+      for (const voiceEntry of restFilledEntries) {
+        const vexFlowVoiceEntry: VexFlowVoiceEntry = voiceEntry as VexFlowVoiceEntry;
+        // add a vexFlow voice for this voice:
+        this.vfVoices[voice.VoiceId] = new Vex.Flow.Voice({
+          beat_value: this.parentSourceMeasure.Duration.Denominator,
+          num_beats: this.parentSourceMeasure.Duration.Numerator,
+          resolution: Vex.Flow.RESOLUTION
+        }).setMode(Vex.Flow.Voice.Mode.SOFT);
 
-      // TODO: Add tickables
-      // vfVoices[voiceID].addTickable(graphicalStaffEntry.vfNotes[voiceID]);
+        this.vfVoices[voice.VoiceId].addTickable(vexFlowVoiceEntry.vfStaveNote);
+      }
     }
   }
 }

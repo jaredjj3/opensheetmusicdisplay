@@ -125,6 +125,7 @@ export class SkyBottomLineCalculator {
             let chunk: number[] = this.mSkyLine.slice(chunkIndex, chunkIndex + arrayChunkSize);
             subSampledSkyLine.push(Math.min(...chunk));
             chunk = this.mBottomLine.slice(chunkIndex, chunkIndex + arrayChunkSize);
+            chunk.push(0);
             subSampledBottomLine.push(Math.max(...chunk));
         }
 
