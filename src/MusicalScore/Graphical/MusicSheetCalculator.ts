@@ -1548,7 +1548,7 @@ export abstract class MusicSheetCalculator {
                 }
             }
 
-            if (note instanceof TabNote && tse !== undefined) {
+            if (note instanceof TabNote) {
               const graphicalTabNote: GraphicalNote = MusicSheetCalculator.symbolFactory.createNote(note, tse, activeClef, octaveShiftValue, undefined);
               graphicalTabStaffEntry.addGraphicalNoteToListAtCorrectYPosition(tse, graphicalTabNote);
               graphicalTabNote.PositionAndShape.calculateBoundingBox();
@@ -1975,6 +1975,18 @@ export abstract class MusicSheetCalculator {
                     measure.addGraphicalStaffEntryAtTimestamp(graphicalStaffEntry);
                 } else {
                     measure.addGraphicalStaffEntry(graphicalStaffEntry);
+                }
+                // if there is a Tab measure
+                if (measure.tabMeasure !== undefined) {
+                  // create new Tab-GraphicalStaffEntry in Tab-Measure
+                  const tabStaffEntry: GraphicalStaffEntry = MusicSheetCalculator.symbolFactory.createStaffEntry(sourceStaffEntry, measure.tabMeasure);
+                  graphicalStaffEntry.tabStaffEntry = tabStaffEntry;
+                  if (entryIndex < measure.tabMeasure.staffEntries.length) {
+                    // a GraphicalStaffEntry has been inserted already at this Index (from Tie)
+                    measure.tabMeasure.addGraphicalStaffEntryAtTimestamp(tabStaffEntry);
+                  } else {
+                    measure.tabMeasure.addGraphicalStaffEntry(tabStaffEntry);
+                  }
                 }
                 const linkedNotes: Note[] = [];
                 if (sourceStaffEntry.Link !== undefined) {
